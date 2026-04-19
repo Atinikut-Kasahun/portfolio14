@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HOVS — House of van Schneider</title>
+    <!-- Fonts for the rich aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-gray: #b9babb;
+            --hovs-red: #d93328;
+            --ink: #0b0b0b;
+            --text-light: #ffffff;
+            --text-muted: #888888;
+            --text-greenish: #9fa78e;
+            --font-main: 'Inter', -apple-system, sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            font-family: var(--font-main);
+            color: var(--text-light);
+            overflow-x: hidden;
+            display: flex;
+        }
+
+        /* 
+         * INDEX BUTTON FIXTURE 
+         */
+        .index-widget {
+            position: fixed;
+            top: 40px;
+            right: 25px; /* Sits over the gray background */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .index-btn {
+            width: 44px;
+            height: 44px;
+            background-color: var(--hovs-red);
+            border-radius: 50%;
+            border: none;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .index-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .index-btn::after {
+            content: "✢";
+            font-size: 18px;
+        }
+
+        .index-label {
+            writing-mode: vertical-rl;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #444; 
+        }
+
+        /* 
+         * LEFT SIDEBAR TAB (Fixed under the main window)
+         */
+        .left-sidebar {
+            position: fixed;
+            top: 45px;
+            left: 0;
+            bottom: 0;
+            width: 100px;
+            background-color: var(--hovs-red);
+            border-top-right-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+            z-index: 1;
+            /* Inset shadow to appear under */
+            box-shadow: inset -4px 0 10px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-brand {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 20px;
+            font-family: var(--font-serif);
+            letter-spacing: 4px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .sidebar-brand::after {
+            content: "✥";
+            font-size: 16px;
+        }
+
+        .sidebar-location {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 40px;
+            margin-bottom: auto;
+        }
+
+        .sidebar-icon {
+            margin-bottom: 40px;
+            font-size: 32px;
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* 
+         * MAIN APPLICATION WINDOW 
+         */
+        .main-wrapper {
+            margin-left: 70px; /* Reveal part of the sidebar */
+            margin-top: 40px;
+            width: calc(100% - 140px); /* Leave right space for gray bg & widget */
+            max-width: 1800px;
+            background-color: var(--ink);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            min-height: calc(100vh - 40px);
+            position: relative;
+            z-index: 2;
+            box-shadow: -10px -5px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            /* Vertical Guide Lines matching exactly 10 columns */
+            background-image: linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 10% 100%;
+        }
+
+        /* 
+         * HERO AREA & MENUS 
+         */
+        .hero {
+            position: relative;
+            padding-bottom: 120px;
+            /* The arch pattern overlay on the hero section */
+            background-image: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="400" viewBox="0 0 100 400"><path d="M 0 400 Q 50 100 100 0" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><path d="M 100 400 Q 50 100 0 0" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/></svg>');
+            background-size: 10% 400px;
+            background-position: top center;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 60px 8% 80px;
+            gap: 6%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-greenish);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text-greenish);
+        }
+
+        .nav-link::before {
+            content: "⊹";
+            color: #666;
+            font-weight: 400;
+        }
+
+        .nav-badge {
+            font-size: 8px;
+            color: #777;
+            vertical-align: super;
+            margin-left: 2px;
+        }
+
+        .hero-graphics {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Abstract emblem replacement for the cherubs */
+        .hero-emblem {
+            width: 300px;
+            height: auto;
+            margin-bottom: 50px;
+            filter: invert(1);
+            opacity: 0.9;
+        }
+
+        .hero-title {
+            font-size: clamp(60px, 11vw, 180px);
+            font-weight: 800;
+            line-height: 0.9;
+            text-align: center;
+            letter-spacing: -3px;
+        }
+
+        /* 
+         * ABOUT SECTION 
+         */
+        .about-section {
+            padding: 0 10% 100px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .about-signature {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 42px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: -30px;
+            margin-bottom: 80px;
+        }
+
+        .about-grid {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .about-text-col {
+            flex: 1;
+            padding-right: 60px;
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            max-width: 500px;
+        }
+
+        .about-text-col p {
+            margin-bottom: 30px;
+        }
+
+        .about-text-col strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .about-text-col a {
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+        
+        .about-text-col a:hover {
+            color: #fff;
+        }
+
+        .about-divider {
+            width: 1px;
+            align-self: stretch; /* Match height of columns */
+            background-color: rgba(255, 255, 255, 0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-divider::after {
+            content: "✥";
+            position: absolute;
+            background-color: var(--ink);
+            padding: 20px 0;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 20px;
+        }
+
+        .about-image-col {
+            flex: 1;
+            padding-left: 60px;
+            max-width: 450px;
+        }
+
+        .about-image {
+            width: 100%;
+            display: block;
+            filter: grayscale(100%) contrast(1.1);
+        }
+
+        .about-caption-title {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .about-caption-role {
+            font-size: 11px;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        /* 
+         * PORTFOLIO PROJECTS
+         */
+        .project {
+            padding: 60px 10% 120px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .project-hero-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #222;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: flex-start;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            gap: 60px;
+        }
+
+        .project-meta-left {
+            flex: 1;
+        }
+
+        .project-meta-right {
+            flex: 1;
+        }
+
+        .project-title {
+            font-size: 32px;
+            line-height: 1.2;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+        }
+
+        .project-title strong {
+            font-weight: 700;
+        }
+
+        .project-tags {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .project-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .project-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .project-details {
+            display: flex;
+            gap: 20px;
+            margin-top: 80px;
+        }
+
+        .project-details-item {
+            flex: 1;
+        }
+
+        .project-details-img {
+            width: 100%;
+            display: block;
+        }
+
+        .project-details-caption {
+            font-size: 14px;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        /* Snowflake / Graphic specific container */
+        .graphic-showcase {
+            background-color: #2522D1; /* vibrant blue */
+            padding: 8vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .graphic-canvas {
+            background-color: #fff;
+            width: 100%;
+            aspect-ratio: 4/3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Light & Custom Color Projects */
+        .project-custom {
+            padding-top: 0;
+            margin: 0;
+        }
+        
+        .project-light {
+            background-color: #ffffff;
+            color: #111111;
+        }
+
+        .project-light .project-desc {
+            color: #888888;
+        }
+
+        .project-light .project-tags {
+            color: #bbbbbb;
+        }
+
+        .project-light .project-link {
+            color: #888888;
+            border-bottom-color: #dddddd;
+        }
+
+        .project-light .project-meta {
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .gradient-circle {
+            width: 50vh;
+            height: 50vh;
+            border-radius: 50%;
+            background: linear-gradient(110deg, #F4AA80, #F77063, #E3A3CA, #EAE0F8);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: blur(8px);
+        }
+        
+        .gradient-circle-inner {
+            position: absolute;
+            width: 75%;
+            height: 75%;
+            background: #ffffff;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        /* 
+         * UX/UI Details & Animations
+         */
+        body, a, button {
+            /* We will hide the OS cursor entirely to commit to our custom solution */
+            cursor: none !important; 
+        }
+
+        /* The hard tracking dot */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference; /* Ensures visibility on any background color */
+            transition: transform 0.15s ease-out, background-color 0.15s;
+        }
+
+        .cursor-dot.hover {
+            transform: translate(-50%, -50%) scale(4.5);
+            background-color: #fff; /* White turns black on white bg */
+            mix-blend-mode: difference;
+        }
+        
+        /* The volumetric glow layer */
+        .custom-cursor {
+            pointer-events: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            transition: background 0.3s ease;
+            mix-blend-mode: difference; /* Interacts deeply with bright section colors */
+            background: radial-gradient(
+                600px at var(--mouse-x, 100vw) var(--mouse-y, 100vh),
+                rgba(255, 255, 255, 0.15),
+                transparent 80%
+            );
+        }
+
+        /* Hover states glow exponentially */
+        .custom-cursor.hover {
+            background: radial-gradient(
+                600px at var(--mouse-x, 100vw) var(--mouse-y, 100vh),
+                rgba(217, 51, 40, 0.25),
+                transparent 80%
+            );
+        }
+
+        /* Scroll Reveal Utility */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Infinite Marquee */
+        .marquee-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 100px 0;
+            background: #000;
+        }
+
+        .marquee-row {
+            display: flex;
+            width: max-content;
+        }
+
+        .marquee-row.left {
+            animation: marqueeLeft 35s linear infinite;
+        }
+
+        /* Right animation starts translated negatively so it scrolls rightwards */
+        .marquee-row.right {
+            transform: translateX(-50%);
+            animation: marqueeRight 45s linear infinite;
+        }
+
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            padding: 0 40px;
+            color: #fff;
+            font-size: 90px;
+            font-family: var(--font-serif);
+            white-space: nowrap;
+            letter-spacing: -2px;
+        }
+
+        .marquee-item img {
+            height: 250px;
+            width: 350px;
+            object-fit: cover;
+            border-radius: 4px;
+            filter: grayscale(100%);
+        }
+
+        @keyframes marqueeLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes marqueeRight {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Global Custom Cursor Layers -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Index Button Widget -->
+    <div class="index-widget">
+        <button class="index-btn" title="Open Index"></button>
+        <div class="index-label">INDEX</div>
+    </div>
+
+    <!-- Left fixed red sidebar tab -->
+    <div class="left-sidebar">
+        <div class="sidebar-brand">HOVS</div>
+        <div class="sidebar-location">
+            House of van Schneider<br/>
+            New York City/BKLYN
+        </div>
+        <div class="sidebar-icon">
+            <!-- decorative emblem for the eagle -->
+            𓅃
+        </div>
+    </div>
+
+    <!-- Main Content Panel -->
+    <div class="main-wrapper">
+        
+        <!-- Hero Section inside main window -->
+        <div class="hero">
+            <div class="nav-header">
+                <div class="nav-group">
+                    <div class="nav-title">REPERTOIRE</div>
+                    <a href="#" class="nav-link">essentials</a>
+                    <a href="#" class="nav-link">essays<span class="nav-badge">DESK</span></a>
+                    <a href="#" class="nav-link">the weekly</a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-title">CRÉATIVITÉ</div>
+                    <a href="#" class="nav-link">mixtapes</a>
+                    <a href="#" class="nav-link">books</a>
+                    <a href="#" class="nav-link">quotes</a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-title">NARRATIVE</div>
+                    <a href="#" class="nav-link">the praxis</a>
+                    <a href="#" class="nav-link">artifacts</a>
+                    <a href="#" class="nav-link">photo archive</a>
+                </div>
+            </div>
+
+            <div class="hero-graphics">
+                <!-- Placeholder for the custom cherubs banner -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Floral_ornament_1.svg" alt="Crea Ergo Sum Embelishment" class="hero-emblem" style="height: 120px; object-fit: contain;">
+                
+                <h1 class="hero-title">
+                    I CREATE;<br/>
+                    THEREFORE<br/>
+                    I AM
+                </h1>
+            </div>
+        </div>
+
+        <!-- About / Signature section -->
+        <div class="about-section">
+            <div class="about-signature">Designed in New York City</div>
+            
+            <div class="about-grid">
+                <div class="about-text-col">
+                    <p>I'm the founder & creative director at <strong>HOVS</strong>, a studio that builds and runs its own products — and occasionally works with partners such as <strong>NASA/JPL</strong> to brand their space missions.</p>
+                    <p>Currently growing <strong>mymind™</strong>, my peaceful escape from the chaos of the internet.</p>
+                    <p>I'm also the co-founder of <strong>Semplice™</strong> and <strong>Carbonmade™</strong>, which have been serving the creative community for more than two decades.</p>
+                    <p>HOVS believes in brands and products that have a point of view. Take a look at some of our work</p>
+                    <a href="#work">↓</a>
+                </div>
+
+                <div class="about-divider"></div>
+
+                <div class="about-image-col">
+                    <!-- Black & white high contrast image of Tobias similar to design -->
+                    <img src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=800&auto=format&fit=crop" alt="Tobias van Schneider" class="about-image">
+                    <div class="about-caption-title">Tobias van Schneider</div>
+                    <div class="about-caption-role">FOUNDER HOVS</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project: BMW Motorcycle -->
+        <div id="work" class="project">
+            <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=1600&auto=format&fit=crop" alt="HOVS BMW Airhead" class="project-hero-img" style="filter: grayscale(100%); object-position: center; height: 60vh; object-fit: cover; ">
+            
+            <div class="project-meta">
+                <div class="project-meta-left">
+                    <h2 class="project-title"><strong>HOVS</strong> — Building a retro-futuristic interpretation of the original BMW airhead</h2>
+                    <div class="project-tags">Brand Identity, Product Design</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc">In collaboration with my friend Seba (<strong>oneYedeer</strong>), we reimagined the classic BMW R100R airhead through a retro-futuristic lens. Every element, from the front fairing to the upholstery and tail, was custom-designed from the ground up. The bike maintains its clear identity as a BMW airhead, but with an unexpected twist that only those with a keen eye for design might fully appreciate.</p>
+                    <a href="#" class="project-link">View project details</a>
+                </div>
+            </div>
+
+            <div class="project-details">
+                <div class="project-details-item">
+                    <img src="https://images.unsplash.com/photo-1609162791834-8cbf3fe8ccec?q=80&w=800&auto=format&fit=crop" alt="Detail Tail section" class="project-details-img" style="filter: grayscale(100%); height: 400px; object-fit: cover;">
+                    <div class="project-details-caption">Detail of the custom fabricated tail section</div>
+                </div>
+                <div class="project-details-item">
+                    <!-- Mockup of the red badge -->
+                    <div style="height: 400px; background: #111; display: flex; align-items: center; justify-content: center; position: relative;">
+                        <!-- Red stylized emblem -->
+                        <div style="width: 220px; height: 220px; border: 3px solid var(--hovs-red); border-radius: 50%; color: var(--hovs-red); display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 11px; letter-spacing: 2px;">
+                            <div>HOUSE OF</div>
+                            <div style="font-size: 30px; margin: 10px 0;">H<span style="opacity: 0.5;">✥</span>S</div>
+                            <div>VAN SCHNEIDER</div>
+                        </div>
+                    </div>
+                    <div class="project-details-caption">Custom badge design</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project: Graphic Identity Snowflake (NASA) -->
+        <div class="project project-custom" style="background-color: #260ebd;">
+            <div class="graphic-showcase" style="background-color: transparent; padding-top: 8vw;">
+                <div class="graphic-canvas" style="max-width: 900px; aspect-ratio: 16/9;">
+                    <svg width="280" height="280" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="6" fill="#260ebd"/>
+                        <path d="M50 15 v15 m0 40 v15 M15 50 h15 m40 0 h15 M25 25 l10 10 m30 30 l10 10 M25 75 l10 -10 m30 -30 l10 -10" stroke="#260ebd" stroke-width="8" stroke-linecap="square"/>
+                        <path d="M35 15 l15 15 l15 -15 M15 35 l15 15 l-15 15 M85 35 l-15 15 l15 15 M35 85 l15 -15 l15 15" stroke="#260ebd" stroke-width="8" stroke-linejoin="miter"/>
+                        <!-- Adding a tiny star sparkle next to logo -->
+                        <path d="M65 30 Q 70 30 70 25 Q 70 30 75 30 Q 70 30 70 35 Q 70 30 65 30 Z" fill="#260ebd"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="project-meta" style="border-top-color: rgba(255,255,255,0.15); padding-top: 60px;">
+                <div class="project-meta-left">
+                    <h2 class="project-title" style="font-size: 40px; letter-spacing: -1.5px; line-height: 1;"><strong>NASA</strong> — Branding NASA's<br>mission to Jupiter's icy<br>moon, Europa</h2>
+                    <div class="project-tags" style="color: rgba(255,255,255,0.4); margin-top: 20px;">Brand Identity, Product Design</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc" style="color: #fff; font-size: 16px;">Once again, NASA asked HOVS to brand its latest mission to space — this time to find out if Jupiter's moon, Europa, has habitable conditions for life. We designed the logo to reflect the clipper's orbit of Jupiter, in which it will dip in and out of Jupiters' dangerous radiation zone to collect samples from the icy moon Europa. Another HOVS logo in space, 1.8 billion miles deep.</p>
+                    <a href="#" class="project-link" style="color: #fff; border-bottom-color: rgba(255,255,255,0.4);">View project details</a>
+                </div>
+            </div>
+
+            <div class="project-details" style="margin-top: 100px;">
+                <div style="background-color: transparent; width: 100%; display: flex; padding-bottom: 0;">
+                    <div style="flex: 2; display: flex; justify-content: center; align-items: flex-end; margin-bottom: -120px; z-index: 2;">
+                        <div style="width: 450px; height: 550px; background: linear-gradient(to right, #ddd, #fff 40%, #eee); border-radius: 225px 225px 10px 10px; box-shadow: inset 0 20px 40px rgba(0,0,0,0.1), inset -20px 0 30px rgba(0,0,0,0.05); position: relative; border-bottom: 3px solid #ccc; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 50px;">
+                            <div style="position: absolute; width: 100%; top: 120px; border-bottom: 1px dashed rgba(0,0,0,0.15);"></div>
+                            <div style="position: absolute; width: 100%; top: 180px; border-bottom: 1px dashed rgba(0,0,0,0.15);"></div>
+                            <svg width="150" height="150" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="mix-blend-mode: multiply; opacity: 0.9;">
+                                <circle cx="50" cy="50" r="6" fill="#260ebd"/>
+                                <path d="M50 15 v15 m0 40 v15 M15 50 h15 m40 0 h15 M25 25 l10 10 m30 30 l10 10 M25 75 l10 -10 m30 -30 l10 -10" stroke="#260ebd" stroke-width="8" stroke-linecap="square"/>
+                                <path d="M35 15 l15 15 l15 -15 M15 35 l15 15 l-15 15 M85 35 l-15 15 l15 15 M35 85 l15 -15 l15 15" stroke="#260ebd" stroke-width="8" stroke-linejoin="miter"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div style="flex: 1; display: flex; align-items: center; justify-content: flex-start; margin-left: -50px;">
+                        <div style="font-size: 110px; font-weight: 800; color: #fff; writing-mode: vertical-rl; transform: rotate(180deg); display: flex; align-items: center; gap: 15px; letter-spacing: -2px;">
+                            EUROPA <span style="font-weight: 400; opacity: 0.9;">CLIPPER</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project: mymind (Light Section) -->
+        <div class="project project-light project-custom" style="padding-top: 0; position: relative;">
+            <div style="background-color: #f7f7f8; padding: 120px 0; display: flex; justify-content: center; align-items: center; margin-bottom: 40px;">
+                <div class="gradient-circle">
+                    <div class="gradient-circle-inner"></div>
+                </div>
+            </div>
+
+            <div class="project-meta" style="padding: 60px 10% 0;">
+                <div class="project-meta-left">
+                    <h2 class="project-title" style="font-size: 38px; letter-spacing: -1px; line-height: 1;"><strong style="color: #ed4e23; font-weight: 500;">mymind</strong> — Building a<br>peaceful oasis within the<br>chaos of the internet</h2>
+                    <div class="project-tags" style="margin-top: 20px;">Brand Identity, Product Design</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc" style="font-size: 16px;">mymind is the first and only extension for your real mind. It's one private place to save everything you care about online, beautifully visualized and organized with the help of artificial intelligence. I co-founded mymind and manage the product design, branding and growth.</p>
+                    <a href="#" class="project-link" style="color: #888; font-weight: 500;">Visit mymind.com</a>
+                </div>
+            </div>
+
+            <div class="project-details" style="padding: 0 10%; margin-top: 80px; padding-bottom: 120px;">
+                <div class="project-details-item">
+                    <div style="background-color: #e5e6e8; padding: 40px; height: 500px; display: flex; justify-content: center; align-items: flex-end; overflow: hidden; position: relative;">
+                        <div style="width: 100%; background: #fbfbfb; height: 85%; border-radius: 12px 12px 0 0; box-shadow: 0 10px 40px rgba(0,0,0,0.08); padding: 40px; display: flex; flex-direction: column;">
+                            <div style="font-family: var(--font-serif); font-size: 32px; color: #d0d0d0; font-style: italic; border-bottom: 2px solid #efefef; padding-bottom: 15px; margin-bottom: 30px;">Search my mind...</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div style="background: #fff; padding: 30px 20px; text-align: center; font-size: 13px; color: #111; line-height: 1.6; font-family: var(--font-serif); font-style: italic; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">"It's not what we don't know that gets us in trouble. It's what we know for sure that just ain't so."</div>
+                                <div style="background-image: url('https://images.unsplash.com/photo-1542382156-df533c360980?auto=format&fit=crop&w=400&q=80'); background-size: cover; background-position: center; border-radius: 4px;"></div>
+                            </div>
+                            <div style="position: absolute; top: 50%; left: -20px; writing-mode: vertical-rl; transform: rotate(180deg); color: #ccc; font-size: 10px; letter-spacing: 2px; font-weight: 600;">mymind</div>
+                        </div>
+                    </div>
+                    <div class="project-details-caption" style="color: #aaa;">A better place for everything.</div>
+                </div>
+                <div class="project-details-item">
+                    <div style="background-color: #ed4e23; height: 500px; display: flex; justify-content: center; align-items: center;">
+                        <div style="font-family: var(--font-serif); font-size: 140px; color: #fff; font-style: italic; font-weight: 700; line-height: 0.8; text-align: center; transform: translateY(-20px);">
+                            m<br><span style="padding-left: 50px;">y</span>
+                        </div>
+                    </div>
+                    <div class="project-details-caption" style="color: #aaa;">The Thinking Guy. Our beloved mymind logo.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project: Red Geometric Logo (Mars Mission) -->
+        <div class="project project-custom" style="padding-bottom: 0; background-color: #da281d;">
+            <div class="graphic-showcase" style="background-color: transparent; padding: 8vw;">
+                <div class="graphic-canvas" style="background-color: #e5eaef; padding: 120px 0;">
+                    <div style="width: 200px; height: 200px; background-color: #da281d; border-radius: 50%; display: flex; justify-content: center; align-items: center; position: relative;">
+                        <!-- geometric Mars rover logomark -->
+                        <svg width="120" height="120" viewBox="0 0 100 100" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M30 40 h15 v-15 a10 10 0 0 1 10 -10 a10 10 0 0 1 10 10 v15 h10 a10 10 0 0 1 10 10 v10 a10 10 0 0 1 -10 10 h-50 a10 10 0 0 1 -10 -10 v-10 a10 10 0 0 1 10 -10 Z" fill="#fff"/>
+                            <rect x="25" y="70" width="20" height="15" rx="5" fill="#fff" />
+                            <rect x="55" y="70" width="20" height="15" rx="5" fill="#fff" />
+                            <path d="M70 30 Q 75 30 75 20 Q 75 30 80 30 Q 75 30 75 40 Q 75 30 70 30 Z" fill="#fff"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-meta" style="border-top-color: rgba(255,255,255,0.2); padding-top: 60px;">
+                <div class="project-meta-left">
+                    <h2 class="project-title" style="font-size: 38px; letter-spacing: -1px; line-height: 1;"><strong>NASA</strong> — Designing an<br>identity for the Mars 2020<br>Perseverance rover mission</h2>
+                    <div class="project-tags" style="color: rgba(255,255,255,0.3); margin-top: 20px;">Brand Identity, Product Design</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc" style="color: #fff; font-size: 16px;">For the 2020 Mars Rover launch, NASA commissioned HOVS to design a symbol celebrating both the legacy of space travel, and the energy of this new mission. At once the rover in abstract and blocks reaching to the sky, the logomark worked as well on NASA gear as it did on the rocket ship.</p>
+                    <a href="#" class="project-link" style="color: #fff; border-bottom-color: rgba(255,255,255,0.4);">Visit the case study</a>
+                </div>
+            </div>
+
+            <div class="project-details" style="margin-top: 100px;">
+                <div style="background-color: transparent; width: 100%; display: flex; padding-bottom: 0;">
+                    <div style="flex: 2; display: flex; justify-content: flex-end; align-items: flex-end; margin-bottom: -120px; z-index: 2;">
+                        <div style="width: 450px; height: 550px; background: #e0e4eb; box-shadow: 0 20px 40px rgba(0,0,0,0.1); position: relative; border-bottom: 3px solid #ccc; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; overflow: hidden;">
+                            <!-- Mock of rocket with Mars logo -->
+                            <div style="position: absolute; left: 0; bottom: 0; width: 100px; height: 100%; background: #333; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 40px; color: #fff; font-size: 30px; font-weight: bold;">A<br><br>T</div>
+                            <div style="width: 250px; height: 100%; background: #fff; margin-left: 50px; border-radius: 125px 125px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 50px; box-shadow: inset 10px 0 20px rgba(0,0,0,0.1), inset -10px 0 20px rgba(0,0,0,0.1);">
+                                <div style="width: 60px; height: 60px; background: #0b3d91; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; margin-bottom: 20px;">NASA</div>
+                                <div style="width: 80px; height: 80px; background-color: #da281d; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                                    <svg width="40" height="40" viewBox="0 0 100 100" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M30 40 h15 v-15 a10 10 0 0 1 10 -10 a10 10 0 0 1 10 10 v15 h10 a10 10 0 0 1 10 10 v10 a10 10 0 0 1 -10 10 h-50 a10 10 0 0 1 -10 -10 v-10 a10 10 0 0 1 10 -10 Z" fill="#fff"/>
+                                    </svg>
+                                </div>
+                                <div style="font-size: 20px; color: #333; letter-spacing: 2px; margin-top: 10px; font-weight: 500;">MARS<br>2020</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="flex: 1; display: flex; align-items: flex-start; justify-content: center;">
+                        <div style="font-size: 100px; font-weight: 400; color: #fff; writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: -2px; line-height: 0.8; margin-top: 50px;">
+                            MARS
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Underneath image caption text -->
+            <div style="display: flex; gap: 20px; padding: 0 10%; margin-top: 140px; padding-bottom: 60px;">
+                <div style="flex: 2; text-align: right; color: #88120a; font-size: 14px; padding-right: 200px;">The mission type identifier on the launch rocket.</div>
+                <div style="flex: 1; color: #88120a; font-size: 14px; padding-left: 50px;">The additional text identifier.</div>
+            </div>
+        </div>
+
+        <!-- Project: Semplice (Yellow Section) -->
+        <div class="project project-custom" style="background-color: #fed926; position: relative;">
+            <div class="graphic-showcase" style="background-color: transparent; padding: 100px 10% 0;">
+                <div class="graphic-canvas" style="background-color: #000; width: 100%; aspect-ratio: 16/9; max-width: none; flex-direction: row; gap: 30px;">
+                    <!-- Semplice Eagle Logo -->
+                    <svg width="100" height="100" viewBox="0 0 100 100" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 Q60 5 70 10 Q65 20 75 30 Q60 35 50 25 Q40 35 25 30 Q35 20 30 10 Q40 5 50 10 Z" fill="#fff"/>
+                        <path d="M50 30 C 80 30, 90 60, 90 70 C 80 65, 70 70, 60 60 C 55 70, 45 70, 40 60 C 30 70, 20 65, 10 70 C 10 60, 20 30, 50 30 Z" fill="#fff"/>
+                        <!-- Simplified representation of the complex eagle logo -->
+                        <circle cx="45" cy="45" r="3" fill="#000" />
+                        <circle cx="55" cy="45" r="3" fill="#000" />
+                        <path d="M48 20 L50 15 L52 20 Z" fill="#fff" />
+                    </svg>
+                    <!-- Typographic Semplice -->
+                    <div style="font-size: 72px; color: #fff; font-weight: 600; letter-spacing: -2px;">Semplice<span style="font-size: 24px; vertical-align: super; font-weight: 500;">™</span></div>
+                </div>
+            </div>
+
+            <div class="project-meta" style="padding: 60px 10%; border-top-color: rgba(0,0,0,0.15);">
+                <div class="project-meta-left">
+                    <h2 class="project-title" style="color: #111; font-size: 38px; letter-spacing: -1px; line-height: 1;"><strong>Semplice™</strong> — The modern<br>creative portfolio system<br>with an old-school heart</h2>
+                    <div class="project-tags" style="color: #6a5e1c; margin-top: 20px;">Brand Identity, Product Design</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc" style="color: #111; font-size: 16px;">The world's leading creatives use Semplice to build custom portfolios from scratch. I co-founded Semplice and I'm responsible for creative direction, product design, branding and marketing. It's an ever-evolving tool, website backend and creative community helping designers build with pride.</p>
+                    <a href="#" class="project-link" style="color: #111; border-bottom-color: rgba(0,0,0,0.2);">Visit semplice.com</a>
+                </div>
+            </div>
+
+            <div class="project-details" style="padding: 0 10%; margin-top: 40px; padding-bottom: 120px;">
+                <div style="width: 100%; display: flex; background: #262626; padding: 40px; border-radius: 8px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); height: 600px; gap: 40px;">
+                    <!-- Semplice Editor Mockup Canvas -->
+                    <div style="flex: 2; display: flex; align-items: center; justify-content: center; position: relative;">
+                        <!-- Webpage preview content -->
+                        <div style="width: 100%; height: 80%; background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80'); background-size: cover; background-position: center; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; position: relative;">
+                            <!-- Selection highlight -->
+                            <div style="position: absolute; width: 80%; height: 60%; border: 2px solid #5aa9e6; margin-top: 60px; pointer-events: none;">
+                                <div style="position: absolute; top: -12px; left: -2px; background: #5aa9e6; color: #fff; font-size: 10px; padding: 2px 6px;">Title</div>
+                            </div>
+                            <!-- Mock UI floating panel -->
+                            <div style="position: absolute; bottom: 20px; right: 20px; width: 200px; height: 180px; background: #111; border-radius: 6px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); padding: 15px; display: flex; flex-direction: column;">
+                                <div style="background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%); width: 100%; flex: 1; border-radius: 4px; margin-bottom: 10px;"></div>
+                                <div style="width: 100%; height: 40px; background: #222; border-radius: 4px; display: flex; align-items: center; padding: 0 10px; color: #fff; font-size: 12px; justify-content: space-between;"><span>#C4EEFC</span> <div style="width: 20px; height: 20px; background: #000; border-radius: 4px;"></div></div>
+                            </div>
+                            <!-- Central Typography -->
+                            <h3 style="color: #fff; font-family: var(--font-serif); font-size: 32px; text-align: center; margin-top: 60px; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">GOSSAMER X OFFHOURS<br>HOMECOAT</h3>
+                        </div>
+                    </div>
+                    <!-- Editor Sidebar Mockup -->
+                    <div style="flex: 1; max-width: 300px; background: #1a1a1a; border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+                        <div style="display: flex; justify-content: space-between; color: #fff; font-size: 14px; border-bottom: 1px solid #333; padding-bottom: 15px; align-items: center;">
+                            <span>Section <span style="color: #666; margin-left: 10px;">Row</span></span>
+                            <div style="width: 24px; height: 24px; background: #fed926; color: #000; display: flex; justify-content: center; align-items: center; font-size: 10px;">✓</div>
+                        </div>
+                        <div style="color: #fff; font-size: 11px;">Spacing</div>
+                        <div style="display: flex; gap: 10px;">
+                            <div style="flex: 1; background: #222; padding: 10px; color: #fff; font-size: 16px; border-bottom: 2px solid #ed1b5a;">0 <span style="font-size: 8px; color: #666; display: block;">Top</span></div>
+                            <div style="flex: 1; background: #222; padding: 10px; color: #fff; font-size: 16px;">20 <span style="font-size: 8px; color: #666; display: block;">Right</span></div>
+                            <div style="flex: 1; background: #222; padding: 10px; color: #fff; font-size: 16px;">0 <span style="font-size: 8px; color: #666; display: block;">Bottom</span></div>
+                            <div style="flex: 1; background: #222; padding: 10px; color: #fff; font-size: 16px;">444 <span style="font-size: 8px; color: #666; display: block;">PX</span></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 11px; margin-top: 10px;">
+                            <span>Background</span>
+                            <div style="width: 20px; height: 20px; background: #fff; border-radius: 4px;"></div>
+                        </div>
+                        <div style="background: #222; height: 80px; display: flex; justify-content: center; align-items: center; color: #666; font-size: 11px; margin-top: 10px; border-radius: 4px; border: 1px dashed #444;">
+                            or select from Unsplash
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Featured Essays -->
+        <div class="project project-light project-custom" style="padding: 100px 10%; position: relative;">
+            <div style="margin-bottom: 40px; border-bottom: 1px solid #111; padding-bottom: 20px;">
+                <h2 style="font-size: 48px; font-weight: 400; letter-spacing: -1px; margin-bottom: 5px;">Featured Essays</h2>
+                <div style="color: #999; font-size: 16px;">from the DESK blog</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <!-- Essay 1 -->
+                <div>
+                    <div style="width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, #f5c25e, #f16628, #f8c983); margin-bottom: 15px; display: flex; justify-content: center; align-items: center;">
+                        <!-- Soft abstract blurry center like image -->
+                        <div style="width: 70%; height: 70%; background: #eb3c1a; border-radius: 50%; filter: blur(25px);"></div>
+                    </div>
+                    <div style="font-size: 18px; color: #111;">Dear young Designer</div>
+                </div>
+                
+                <!-- Essay 2 -->
+                <div>
+                    <div style="width: 100%; aspect-ratio: 1; background: #000; margin-bottom: 15px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                        <!-- abstract white scribbles -->
+                        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M0 20 Q 30 10, 50 50 T 100 80 M10 80 Q 40 90, 80 40 M0 50 Q 80 0, 100 50 M20 0 Q 30 100, 90 20 M10 40 Q 60 70, 90 0 M20 90 Q 50 10, 100 100 M 0 70 Q 50 30, 80 100 M 30 0 Q 60 40, 10 100 M 10 10 Q 90 90, 20 80 M 80 20 Q 10 90, 90 80" fill="none" stroke="#fff" stroke-width="1.5" />
+                        </svg>
+                    </div>
+                    <div style="font-size: 18px; color: #111;">Breaking the algorithm</div>
+                </div>
+
+                <!-- Essay 3 -->
+                <div>
+                    <div style="width: 100%; aspect-ratio: 1; background: #e5281a; margin-bottom: 15px; position: relative; overflow: hidden;">
+                        <!-- abstract shape -->
+                        <div style="position: absolute; top: 0; right: 0; width: 80%; height: 80%; background: linear-gradient(135deg, #000, #111); border-bottom-left-radius: 100%; border-top-right-radius: 50%; transform: rotate(15deg) translate(10%, -10%); box-shadow: -10px 10px 30px rgba(0,0,0,0.5);"></div>
+                        <div style="position: absolute; bottom: 10%; right: 10%; width: 50%; height: 50%; background: #000; border-radius: 50%; border-bottom-right-radius: 100%; transform: scaleX(1.5) rotate(-30deg);"></div>
+                    </div>
+                    <div style="font-size: 18px; color: #111;">Where are our design heroes?</div>
+                </div>
+            </div>
+            
+            <div style="height: 100px;"></div> <!-- Final padding -->
+        </div>
+
+        <!-- Project: AD ASTRA -->
+        <div class="project project-custom" style="background-color: #111;">
+            <div class="graphic-showcase" style="background-color: #1a1a1a; padding: 8vw;">
+                <div class="graphic-canvas" style="background-color: #d4d4d4; padding: 100px 0; max-width: 900px; position: relative; overflow: hidden;">
+                    <!-- Room architecture shadows -->
+                    <div style="position: absolute; top: 0; left: 0; bottom: 0; width: 25%; background: linear-gradient(to right, rgba(0,0,0,0.15), transparent); border-right: 1px solid rgba(0,0,0,0.05);"></div>
+                    <div style="position: absolute; top: 40%; right: -20%; width: 50%; height: 200%; background: linear-gradient(135deg, rgba(0,0,0,0.2), transparent); transform: rotate(25deg); pointer-events: none;"></div>
+                    
+                    <!-- Poster -->
+                    <div style="width: 420px; height: 650px; background: #000; margin: 0 auto; box-shadow: 0 40px 80px rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column; align-items: center; padding: 50px 30px;">
+                        <!-- Matrix text lines mock -->
+                        <div style="width: 100%; height: 60%; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 4px; opacity: 0.4;">
+                            <!-- repeating block -->
+                            <div style="width: 12px; height: 2px; background: #fff;"></div><div style="width: 24px; height: 2px; background: #fff;"></div><div style="width: 8px; height: 2px; background: #fff;"></div><div style="width: 30px; height: 2px; background: #fff;"></div><div style="width: 16px; height: 2px; background: #fff;"></div><div style="width: 40px; height: 2px; background: #fff;"></div><div style="width: 10px; height: 2px; background: #fff;"></div><div style="width: 50px; height: 2px; background: #fff;"></div><div style="width: 20px; height: 2px; background: #fff;"></div>
+                            <div style="width: 20px; height: 2px; background: #fff;"></div><div style="width: 14px; height: 2px; background: #fff;"></div><div style="width: 38px; height: 2px; background: #fff;"></div><div style="width: 10px; height: 2px; background: #fff;"></div><div style="width: 26px; height: 2px; background: #fff;"></div><div style="width: 22px; height: 2px; background: #fff;"></div><div style="width: 18px; height: 2px; background: #fff;"></div><div style="width: 44px; height: 2px; background: #fff;"></div>
+                            <div style="width: 15px; height: 2px; background: #fff;"></div><div style="width: 25px; height: 2px; background: #fff;"></div><div style="width: 35px; height: 2px; background: #fff;"></div><div style="width: 12px; height: 2px; background: #fff;"></div><div style="width: 32px; height: 2px; background: #fff;"></div><div style="width: 18px; height: 2px; background: #fff;"></div><div style="width: 28px; height: 2px; background: #fff;"></div><div style="width: 22px; height: 2px; background: #fff;"></div>
+                            <div style="width: 42px; height: 2px; background: #fff;"></div><div style="width: 14px; height: 2px; background: #fff;"></div><div style="width: 20px; height: 2px; background: #fff;"></div><div style="width: 38px; height: 2px; background: #fff;"></div><div style="width: 16px; height: 2px; background: #fff;"></div><div style="width: 24px; height: 2px; background: #fff;"></div><div style="width: 10px; height: 2px; background: #fff;"></div><div style="width: 30px; height: 2px; background: #fff;"></div>
+                            <!-- space -->
+                            <div style="width: 100%; height: 10px;"></div>
+                            <div style="width: 12px; height: 2px; background: #fff;"></div><div style="width: 24px; height: 2px; background: #fff;"></div><div style="width: 8px; height: 2px; background: #fff;"></div><div style="width: 30px; height: 2px; background: #fff;"></div><div style="width: 16px; height: 2px; background: #fff;"></div><div style="width: 40px; height: 2px; background: #fff;"></div><div style="width: 10px; height: 2px; background: #fff;"></div><div style="width: 50px; height: 2px; background: #fff;"></div><div style="width: 20px; height: 2px; background: #fff;"></div>
+                            <div style="width: 20px; height: 2px; background: #fff;"></div><div style="width: 14px; height: 2px; background: #fff;"></div><div style="width: 38px; height: 2px; background: #fff;"></div><div style="width: 10px; height: 2px; background: #fff;"></div><div style="width: 26px; height: 2px; background: #fff;"></div><div style="width: 22px; height: 2px; background: #fff;"></div><div style="width: 18px; height: 2px; background: #fff;"></div><div style="width: 44px; height: 2px; background: #fff;"></div>
+                            <div style="width: 15px; height: 2px; background: #fff;"></div><div style="width: 25px; height: 2px; background: #fff;"></div><div style="width: 35px; height: 2px; background: #fff;"></div><div style="width: 12px; height: 2px; background: #fff;"></div><div style="width: 32px; height: 2px; background: #fff;"></div><div style="width: 18px; height: 2px; background: #fff;"></div><div style="width: 28px; height: 2px; background: #fff;"></div><div style="width: 22px; height: 2px; background: #fff;"></div>
+                            <div style="width: 42px; height: 2px; background: #fff;"></div><div style="width: 14px; height: 2px; background: #fff;"></div><div style="width: 20px; height: 2px; background: #fff;"></div><div style="width: 38px; height: 2px; background: #fff;"></div><div style="width: 16px; height: 2px; background: #fff;"></div><div style="width: 24px; height: 2px; background: #fff;"></div><div style="width: 10px; height: 2px; background: #fff;"></div><div style="width: 30px; height: 2px; background: #fff;"></div>
+                            
+                            <div style="width: 100%; height: 20px;"></div>
+                            <div style="width: 12px; height: 2px; background: #fff;"></div><div style="width: 24px; height: 2px; background: #fff;"></div><div style="width: 8px; height: 2px; background: #fff;"></div><div style="width: 30px; height: 2px; background: #fff;"></div><div style="width: 16px; height: 2px; background: #fff;"></div><div style="width: 40px; height: 2px; background: #fff;"></div><div style="width: 10px; height: 2px; background: #fff;"></div><div style="width: 50px; height: 2px; background: #fff;"></div><div style="width: 20px; height: 2px; background: #fff;"></div>
+                            <div style="width: 20px; height: 2px; background: #fff;"></div><div style="width: 14px; height: 2px; background: #fff;"></div><div style="width: 38px; height: 2px; background: #fff;"></div><div style="width: 10px; height: 2px; background: #fff;"></div><div style="width: 26px; height: 2px; background: #fff;"></div><div style="width: 22px; height: 2px; background: #fff;"></div><div style="width: 18px; height: 2px; background: #fff;"></div><div style="width: 44px; height: 2px; background: #fff;"></div>
+                        </div>
+                        <div style="margin-top: auto; padding-bottom: 20px; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 20px;"></div>
+                        <div style="color: #fff; font-size: 52px; font-weight: 800; letter-spacing: 2px; font-family: var(--font-sans); transform: scaleX(1.2);">AD ASTRA</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-meta" style="border-top-color: rgba(255,255,255,0.1); padding-top: 60px;">
+                <div class="project-meta-left">
+                    <h2 class="project-title" style="color: #fff; font-size: 38px; letter-spacing: -1px; line-height: 1;"><strong>AD ASTRA</strong> — A movie<br>poster for Brad Pitt's<br>cinematic venture into deep<br>space</h2>
+                    <div class="project-tags" style="color: rgba(255,255,255,0.2); margin-top: 20px;">Graphic Poster Design</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc" style="color: #666; font-size: 16px;">The setting: deep space. The actor: Brad Pitt. The request: Design a poster for the film. Our work plays with white space and the acronym LOS, meaning Loss of Signal. While our designs were not ultimately the final poster, it was an honor to have our work considered for this film.</p>
+                </div>
+            </div>
+
+            <div class="project-details" style="margin-top: 100px;">
+                <div style="width: 100%; display: flex; background: #000; height: 500px;">
+                    <!-- LOS Typography -->
+                    <div style="flex: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background: #000; position: relative;">
+                        <!-- Thick distorted text rows -->
+                        <div style="font-size: 260px; font-weight: 900; line-height: 0.75; letter-spacing: -8px; color: #fff; transform: scale(1.1, 1.4); filter: contrast(2);">LOS</div>
+                        <!-- Glitch line overlays -->
+                        <div style="position: absolute; top: 15%; width: 100%; height: 8px; background: #000; opacity: 0.9;"></div>
+                        <div style="position: absolute; top: 25%; width: 100%; height: 4px; background: #fff; opacity: 0.7;"></div>
+                        <div style="position: absolute; top: 35%; width: 100%; height: 12px; background: #000; opacity: 0.95;"></div>
+                        <div style="position: absolute; top: 55%; left: -20px; width: 105%; height: 10px; background: #000; opacity: 0.9;"></div>
+                        <div style="position: absolute; top: 70%; right: -20px; width: 101%; height: 8px; background: #000; opacity: 1;"></div>
+                        <div style="position: absolute; top: 80%; width: 100%; height: 6px; background: #fff; mix-blend-mode: overlay;"></div>
+                        <div style="position: absolute; top: 85%; width: 100%; height: 15px; background: #000;"></div>
+                    </div>
+                    <!-- Audio Wave -->
+                    <div style="flex: 1; display: flex; align-items: center; justify-content: center; border-left: 1px solid #1a1a1a;">
+                        <svg width="150" height="400" viewBox="0 0 100 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50 0 L52 20 L40 30 L60 40 L45 50 L80 60 L30 70 L55 80 L20 100 L70 120 L45 140 L85 150 L55 160 L40 180 L60 200 L45 220 L65 240 L35 260 L50 300" stroke="#fff" stroke-width="1" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+                <!-- Underneath image caption text -->
+                <div style="display: flex; gap: 20px; padding: 0 10%; margin-top: 20px; padding-bottom: 80px;">
+                    <div style="flex: 2; color: #333; font-size: 14px;">Details of the typography.</div>
+                    <div style="flex: 1; color: #333; font-size: 14px; padding-left: 20px;">Signal lost in space.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Random Artifacts -->
+        <div class="project project-custom" style="padding: 100px 0 200px; background-color: #080808; position: relative;">
+            
+            <!-- Sticky/Centered Title Block -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;">
+                <!-- the sticky wrapper -->
+                <div style="position: sticky; top: 40vh; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100px; margin: 0 auto; padding-right: 50px;">
+                    <div style="display: flex; gap: -4px; margin-bottom: 20px; align-items: center; justify-content: center; width: 100%; transform: rotate(90deg) translateY(10px);">
+                        <div style="width: 16px; height: 16px; border: 2px solid #ed4e23; border-radius: 50%; opacity: 0.8;"></div>
+                        <div style="width: 16px; height: 16px; border: 2px solid #5aa9e6; border-radius: 50%; opacity: 0.8; margin-left: -8px;"></div>
+                        <div style="width: 16px; height: 16px; border: 2px solid #fed926; border-radius: 50%; opacity: 0.8; margin-left: -8px;"></div>
+                    </div>
+                    <div style="writing-mode: vertical-rl; transform: rotate(180deg); color: #e5e5e5; font-size: 16px; font-weight: 500; letter-spacing: 1.5px; border-left: 1px solid #333; padding-left: 15px; height: 350px;">
+                        Random artifacts<br>from the HOVS archive
+                    </div>
+                </div>
+            </div>
+
+            <!-- Masonry Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; padding: 0 10%; gap: 10vw; margin-top: 150px; position: relative; z-index: 2;">
+                
+                <!-- Left Column -->
+                <div style="display: flex; flex-direction: column; gap: 200px;">
+                    <!-- Sneaker -->
+                    <div>
+                        <div style="background-image: url('https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80'); filter: grayscale(100%) contrast(1.1); width: 100%; aspect-ratio: 4/5; background-size: cover; background-position: center; border-radius: 2px;">
+                            <div style="color: #fff; font-size: 12px; font-family: Helvetica, sans-serif; padding: 30px; text-align: right; opacity: 0.8; font-weight: bold; letter-spacing: 1px;">"SHOELACES"</div>
+                        </div>
+                        <div style="color: #444; font-size: 15px; margin-top: 25px; line-height: 1.6;">
+                            Custom Sneaker, hand-made with love and tears<br>by me. Inspired by Virgil Abloh.
+                        </div>
+                    </div>
+
+                    <!-- Red Quote -->
+                    <div style="background-color: #da281d; width: 100%; aspect-ratio: 0.8; padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; position: relative;">
+                        <h3 style="color: #fff; font-size: 40px; font-weight: 700; line-height: 1.05; letter-spacing: -2px; margin-bottom: 40px; font-family: var(--font-sans);">
+                            "If you want to be a<br>better designer, don't<br>study design books.<br>Study sculpture.<br>Study paintings.<br>Study cars, watches,<br>philosophers, movies,<br>fiction, music, people.<br><br>Study the world."
+                        </h3>
+                        <div style="position: absolute; bottom: 30px; right: 30px; text-align: right; color: rgba(0,0,0,0.6); font-size: 9px; font-weight: 800; letter-spacing: 1px; line-height: 1.5;">
+                            <svg width="40" height="20" viewBox="0 0 100 50" fill="currentColor" style="margin-bottom: 5px;">
+                                <path d="M10 25 Q30 5 50 25 T90 25" fill="none" stroke="currentColor" stroke-width="4"/>
+                            </svg><br>
+                            EXCERPT FROM A<br>RANDOM DESK BLOG POST
+                        </div>
+                    </div>
+                    <div style="color: #444; font-size: 15px; margin-top: 25px; line-height: 1.6;">
+                        Poster designed for one of my essays.
+                    </div>
+
+                    <!-- MACBA Book -->
+                    <div>
+                        <div style="background-image: url('https://images.unsplash.com/photo-1544411047-c45ba12bf5ce?auto=format&fit=crop&w=600&q=80'); filter: grayscale(100%); width: 100%; aspect-ratio: 4/5; background-size: cover; background-position: center; border-radius: 2px; position: relative;">
+                            <div style="position: absolute; top: 30%; left: 10%; color: #fff; font-family: var(--font-sans); font-size: 60px; font-weight: 800; line-height: 0.8; letter-spacing: -2px;">MAC<br>&nbsp;&nbsp;BA</div>
+                        </div>
+                        <div style="color: #444; font-size: 15px; margin-top: 25px; line-height: 1.6;">
+                            Exploratory book cover design featuring<br>photograph from Barcelona MACBA architecture.
+                        </div>
+                    </div>
+
+                    <!-- NASA Sneaker -->
+                    <div>
+                        <div style="background-color: #e5e5e5; width: 100%; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; border-radius: 2px;">
+                            <!-- White/Red Mockup Sneaker -->
+                            <div style="width: 80%; padding-top: 100%; background-image: url('https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80'); filter: grayscale(100%) contrast(1.5) sepia(100%) hue-rotate(-50deg) saturate(300%) brightness(1.2); mix-blend-mode: multiply; transform: rotate(-15deg);"></div>
+                        </div>
+                        <div style="color: #444; font-size: 15px; margin-top: 25px; line-height: 1.6;">
+                            Custom sneaker hand-made by myself. NASA inspired. Find<br>more at vanschneider.com/custom-sneakers.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div style="display: flex; flex-direction: column; gap: 200px; padding-top: 50vh;">
+                    <!-- Beach -->
+                    <div>
+                        <div style="background-image: url('https://images.unsplash.com/photo-1476610182048-b716b8518aae?auto=format&fit=crop&w=600&q=80'); filter: grayscale(100%) contrast(1.2); width: 100%; aspect-ratio: 1; background-size: cover; background-position: center; border-radius: 2px;"></div>
+                        <div style="color: #444; font-size: 15px; margin-top: 25px; line-height: 1.6;">
+                            Photograph of a beach in Iceland. It felt like being<br>on another planet. The sand is black due to the<br>volcanic ashes.
+                        </div>
+                    </div>
+
+                    <!-- JPL Badge -->
+                    <div style="width: 100%; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; position: relative; margin-top: 100px;">
+                        <div style="width: 90%; height: 90%; border-radius: 50%; border: 1px solid #333; position: relative; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle, #222 0%, #080808 100%);">
+                            <!-- Circular Text Path -->
+                            <svg viewBox="0 0 200 200" width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+                                <path id="curve-jpl" d="M 20 100 A 80 80 0 1 1 180 100 A 80 80 0 1 1 20 100" fill="transparent" />
+                                <text font-family="var(--font-sans)" font-size="12" font-weight="700" fill="#666" letter-spacing="5.5">
+                                    <textPath href="#curve-jpl" startOffset="0" text-anchor="start">
+                                        SECRET ORDER FOR DARK MATTER & DARK ENERGY
+                                    </textPath>
+                                </text>
+                            </svg>
+                            <!-- Inner geometric shapes replicating badge details -->
+                            <div style="position: absolute; width: 65%; height: 65%; border-radius: 50%; border: 1px solid #444; display: flex; align-items: center; justify-content: center;">
+                                <div style="position: absolute; width: 1px; height: 100%; background: rgba(255,255,255,0.1);"></div>
+                                <div style="position: absolute; height: 1px; width: 100%; background: rgba(255,255,255,0.1);"></div>
+                                <div style="position: absolute; width: 70%; height: 70%; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.2);"></div>
+                                <svg width="50%" height="50%" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="1.5">
+                                    <circle cx="50" cy="30" r="10" fill="#222" stroke="#fff"/>
+                                    <circle cx="50" cy="30" r="3" fill="#fff" />
+                                    <path d="M30 20 Q50 5 70 20" />
+                                    <path d="M40 50 L60 50 L60 70 A10 10 0 0 1 40 70 Z" />
+                                    <path d="M40 85 L60 85 L50 100 Z" fill="#fff"/>
+                                </svg>
+                                <div style="position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; border-radius: 50% 0 0 50%; opacity: 0.3;">
+                                    <div style="width: 200%; height: 200%; background-image: radial-gradient(circle at center, #fff 10%, transparent 10%), radial-gradient(circle at center, #fff 10%, transparent 10%); background-size: 10px 10px; background-position: 0 0, 5px 5px; transform: rotate(45deg);"></div>
+                                </div>
+                            </div>
+                            <div style="position: absolute; bottom: 15%; font-size: 18px; font-weight: 800; color: #fff; background: #080808; padding: 2px 15px; letter-spacing: 3px; border: 1px solid #333;">JPL</div>
+                        </div>
+                    </div>
+                    <div style="color: #444; font-size: 15px; margin-top: 25px; line-height: 1.6;">
+                        Badge design to celebrate 80th anniversary of JPL,<br>the founding agency of NASA. Designed in<br>collaboration with Verena Michelitsch.
+                    </div>
+
+                    <!-- Red Structure -->
+                    <div>
+                        <div style="background-color: #ba1313; width: 100%; aspect-ratio: 4/5; display: flex; justify-content: flex-start; align-items: flex-end; border-radius: 2px; padding: 40px; box-shadow: inset -20px 20px 100px rgba(0,0,0,0.5); overflow: hidden;">
+                            <!-- abstract folded paper mock -->
+                            <div style="display: flex; flex-direction: column; width: 120%; gap: 12px; transform: rotate(35deg) translateY(100px) translateX(-50px);">
+                                <div style="height: 25px; background: #600000; box-shadow: 0 8px 15px rgba(0,0,0,0.5);"></div>
+                                <div style="height: 25px; background: #700000; box-shadow: 0 8px 15px rgba(0,0,0,0.5);"></div>
+                                <div style="height: 25px; background: #800000; box-shadow: 0 8px 15px rgba(0,0,0,0.5);"></div>
+                                <div style="height: 25px; background: #900000; box-shadow: 0 8px 15px rgba(0,0,0,0.5);"></div>
+                                <div style="height: 25px; background: #a00000; box-shadow: 0 8px 15px rgba(0,0,0,0.5);"></div>
+                                <div style="height: 25px; background: #b00000; box-shadow: 0 8px 15px rgba(0,0,0,0.5);"></div>
+                                <div style="height: 200px; background: #c00000; box-shadow: 0 8px 15px rgba(0,0,0,0.5);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Black Sweatshirt -->
+                    <div>
+                        <div style="background-image: url('https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80'); filter: grayscale(100%) contrast(1.2); width: 100%; aspect-ratio: 1; background-size: cover; background-position: center; border-radius: 2px;"></div>
+                        <div style="color: #444; font-size: 15px; margin-top: 25px; line-height: 1.6;">
+                            Limited Edition sweatshirt designed by yours<br>truly, in collaboration with Unsplash. Only 500<br>were ever made, and all sold out.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Project: Carbonmade (Purple Section) -->
+        <div class="project project-custom" style="background-color: #a47ac4; padding-bottom: 0;">
+            <div class="graphic-showcase" style="background-color: transparent; padding: 100px 10% 0;">
+                <div class="graphic-canvas" style="background-color: #A6D0CD; width: 100%; aspect-ratio: 16/9; max-width: none; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                    <!-- 3D Bird Character Mockup -->
+                    <div style="width: 140px; height: 260px; background: #b0d664; border-radius: 125px; box-shadow: inset -10px -10px 30px rgba(0,0,0,0.3), inset 10px 10px 30px rgba(255,255,255,0.5), 0 30px 40px rgba(0,0,0,0.2); position: relative; z-index: 1;">
+                        <!-- Eye -->
+                        <div style="position: absolute; right: 10px; top: 80px; width: 40px; height: 40px; background: #fff; border-radius: 50%; box-shadow: 0 5px 10px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center;">
+                            <div style="width: 15px; height: 15px; background: #000; border-radius: 50%;"></div>
+                        </div>
+                        <!-- Beak -->
+                        <div style="position: absolute; right: -25px; top: 110px; width: 30px; height: 15px; background: #fecb40; border-radius: 20px;"></div>
+                        <!-- Hair -->
+                        <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px;">
+                            <div style="width: 15px; height: 40px; background: #9686bc; border-radius: 20px; transform: rotate(-20deg);"></div>
+                            <div style="width: 15px; height: 50px; background: #9686bc; border-radius: 20px;"></div>
+                            <div style="width: 15px; height: 40px; background: #9686bc; border-radius: 20px; transform: rotate(20deg);"></div>
+                        </div>
+                        <!-- Legs -->
+                        <div style="position: absolute; bottom: -30px; left: 40px; width: 8px; height: 40px; background: #e5b05c;"></div>
+                        <div style="position: absolute; bottom: -30px; right: 40px; width: 8px; height: 40px; background: #e5b05c;"></div>
+                        <div style="position: absolute; bottom: -30px; left: 25px; width: 15px; height: 5px; background: #e5b05c; border-radius: 5px;"></div>
+                        <div style="position: absolute; bottom: -30px; right: 25px; width: 15px; height: 5px; background: #e5b05c; border-radius: 5px;"></div>
+                    </div>
+                    <!-- Carbonmade Logo Text -->
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; pointer-events: none; z-index: 2;">
+                        <h1 style="font-family: var(--font-sans); font-size: 14vw; font-weight: 800; color: #fff; letter-spacing: -2px; text-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: -5vw; line-height: 1;">CARBON</h1>
+                        <h2 style="font-family: 'Brush Script MT', cursive, var(--font-serif); font-size: 8vw; color: #fff; margin-left: 20vw; text-shadow: 0 5px 20px rgba(0,0,0,0.1); transform: rotate(-5deg);">made</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-meta" style="padding: 60px 10%; border-top-color: rgba(0,0,0,0.15);">
+                <div class="project-meta-left">
+                    <h2 class="project-title" style="color: #111; font-size: 38px; letter-spacing: -1px; line-height: 1;"><strong>CARBONMADE</strong> — Helping<br>creatives show off their<br>work since 2005</h2>
+                    <div class="project-tags" style="color: #fff; margin-top: 20px; opacity: 0.8;">Brand Identity, Product Design</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc" style="color: #444; font-size: 16px;">Carbonmade is an institution in the creative community, powering more than 2 million portfolios since before Twitter and the iPhone existed. I came on board as partner in 2018 and led Carbonmade through a complete redesign and rebrand. I now manage Carbonmade's product design and identity.</p>
+                    <a href="#" class="project-link" style="color: #111; border-bottom-color: rgba(0,0,0,0.2); font-weight: 600; text-decoration: none; padding-bottom: 5px; border-bottom: 2px solid rgba(0,0,0,0.2);">Visit carbonmade.com</a>
+                </div>
+            </div>
+
+            <div class="project-details" style="padding: 0 10%; margin-top: 40px; padding-bottom: 120px;">
+                <div style="width: 100%; display: flex; height: 500px; box-shadow: 0 30px 60px rgba(0,0,0,0.2);">
+                    <div style="flex: 2; background: #e0f2f8; display: flex; justify-content: center; align-items: flex-end; overflow: hidden; padding-top: 60px; position: relative;">
+                        <!-- Browser Window Mockup -->
+                        <div style="width: 80%; height: 90%; background: #fbfbfb; border-radius: 8px 8px 0 0; box-shadow: 0 10px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+                            <!-- Browser Chrome -->
+                            <div style="height: 40px; border-bottom: 1px solid #eee; display: flex; align-items: center; padding: 0 20px; gap: 8px;">
+                                <div style="width: 10px; height: 10px; background: #e0e0e0; border-radius: 50%;"></div>
+                                <div style="width: 10px; height: 10px; background: #e0e0e0; border-radius: 50%;"></div>
+                                <div style="width: 10px; height: 10px; background: #e0e0e0; border-radius: 50%;"></div>
+                            </div>
+                            <div style="padding: 30px; flex: 1; position: relative;">
+                                <div style="font-size: 24px; font-family: var(--font-sans); font-weight: 800; letter-spacing: -1px; margin-bottom: 30px; color: #111;">zoe carbina</div>
+                                <div style="position: absolute; right: 30px; top: 35px; display: flex; gap: 5px; flex-direction: column;">
+                                    <div style="width: 25px; height: 2px; background: #111;"></div>
+                                    <div style="width: 25px; height: 2px; background: #111;"></div>
+                                    <div style="width: 25px; height: 2px; background: #111;"></div>
+                                </div>
+                                <div style="width: 250px; height: 250px; background: #A6D0CD; border-radius: 4px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px;">
+                                     <div style="width: 60px; height: 160px; background: #b0d664; border-radius: 60px; box-shadow: inset -5px -5px 15px rgba(0,0,0,0.2), inset 5px 5px 15px rgba(255,255,255,0.4); position: relative;">
+                                        <div style="position: absolute; right: 5px; top: 40px; width: 15px; height: 15px; background: #fff; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center;">
+                                            <div style="width: 6px; height: 6px; background: #000; border-radius: 50%;"></div>
+                                        </div>
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="flex: 1; background: #4b3164; display: flex; justify-content: center; align-items: center;">
+                        <div style="width: 120px; height: 120px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-family: 'Brush Script MT', cursive; font-size: 70px; font-weight: bold; color: #111; padding-top: 10px;">m</div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 20px; color: #fff; opacity: 0.8; font-size: 14px; font-weight: 500;">
+                    <div>Show Off Your Work® with Carbonmade.</div>
+                    <div>The Carbonmade Interface.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Memomi -->
+        <div class="project project-custom" style="padding: 0; background-color: #1a1a1a;">
+            <div style="width: 100%; aspect-ratio: 16/9; max-height: 900px; background: #111; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative;">
+                <!-- Dark sleek product geometry mockup -->
+                <div style="width: 150%; height: 200%; background: radial-gradient(circle at center, #222, #000); position: absolute; top: 50%; left: 0%; transform: rotate(15deg) translateY(-50%); opacity: 0.6;"></div>
+                <div style="width: 90%; height: 100%; background: linear-gradient(-45deg, #0a0a0a, #2a2a2a); position: absolute; bottom: -30%; left: -10%; border-radius: 10% 40% 10% 10%; box-shadow: inset 20px 20px 80px rgba(255,255,255,0.05), inset -20px -20px 80px rgba(0,0,0,0.9), 0 -20px 50px rgba(0,0,0,0.8);">
+                    <div style="color: #fff; font-family: var(--font-sans); font-size: 20px; font-weight: 300; letter-spacing: 4px; position: absolute; top: 35%; left: 25%; transform: rotate(-35deg); opacity: 0.6;">memomi</div>
+                    <div style="position: absolute; top: 30%; left: 35%; width: 40%; height: 20%; background-image: radial-gradient(circle, rgba(0,0,0,0.8) 1px, transparent 1px); background-size: 4px 4px; transform: rotate(-35deg); opacity: 0.5;"></div>
+                    <div style="position: absolute; bottom: 15%; right: 30%; width: 30px; height: 10px; border-radius: 10px; background: #000; box-shadow: inset 0 2px 5px rgba(0,0,0,1);"></div>
+                </div>
+            </div>
+            
+            <div class="project-meta" style="padding: 60px 10%; border-top-color: rgba(255,255,255,0.05);">
+                <div class="project-meta-left">
+                    <h2 class="project-title" style="color: #fff; font-size: 38px; letter-spacing: -1px; line-height: 1;"><strong>Memomi</strong> — Reinventing the<br>luxury shopping experience<br>with a new high-end digital<br>mirror</h2>
+                    <div class="project-tags" style="color: rgba(255,255,255,0.4); margin-top: 20px;">Advisor, Creative Director</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc" style="color: #bbb; font-size: 16px;">Memomi created the world's first digital mirror software platform called Memory Mirror. I overseeing the user experience, brand creative and ever-evolving product design. Memomi launched with partners such as Intel, IBM, Sony and Panasonic, and now appears in high-end stores like Neiman Marcus.</p>
+                    <a href="#" class="project-link" style="color: #fff; border-bottom-color: rgba(255,255,255,0.2);">Visit memomi.co</a>
+                </div>
+            </div>
+
+            <div class="project-details" style="padding: 0 10%; margin-top: 40px; padding-bottom: 120px;">
+                <div style="display: flex; height: 500px; gap: 2vw;">
+                    <!-- Left Memomi Logo Canvas -->
+                    <div style="flex: 1.5; background: #000; display: flex; justify-content: center; align-items: center;">
+                        <h1 style="color: #fff; font-family: var(--font-sans); font-size: 5vw; font-weight: 300; letter-spacing: 5px; position: relative;">mem<span style="position:relative;top:10px;">o</span>mi<span style="font-size: 20px; position:absolute; top:-10px; right:-25px;">&#174;</span></h1>
+                    </div>
+                    <!-- Right Mirror UI -->
+                    <div style="flex: 1; background: #111; display: flex; justify-content: center; align-items: flex-end; padding: 20px; padding-bottom: 0;">
+                        <div style="width: 90%; height: 95%; background-image: url('https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=600&q=80'); background-size: cover; background-position: center; border: 12px solid #222; border-bottom: 0; border-radius: 4px 4px 0 0; position: relative;">
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 40%);"></div>
+                            <div style="position: absolute; top: 20px; left: 0; width: 100%; text-align: center; color: #fff;">
+                                <div style="font-size: 10px; letter-spacing: 2px;">memomi</div>
+                                <div style="font-size: 22px; font-weight: 600; line-height: 1.1; margin-top: 10px;">Realistic<br>Live Makeover<br>in Seconds</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Random Artifacts 2 (Dark) -->
+        <div class="project project-custom" style="padding: 100px 0 200px; background-color: #0c0c0e; position: relative;">
+            
+            <!-- Sticky/Centered Title Block -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;">
+                <div style="position: sticky; top: 40vh; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100px; margin: 0 auto; padding-right: 50px;">
+                    <div style="display: flex; gap: -4px; margin-bottom: 20px; align-items: center; justify-content: center; width: 100%; transform: rotate(90deg) translateY(10px);">
+                        <div style="width: 16px; height: 16px; border: 2px solid #ed4e23; border-radius: 50%; opacity: 0.8;"></div>
+                        <div style="width: 16px; height: 16px; border: 2px solid #5aa9e6; border-radius: 50%; opacity: 0.8; margin-left: -8px;"></div>
+                        <div style="width: 16px; height: 16px; border: 2px solid #fed926; border-radius: 50%; opacity: 0.8; margin-left: -8px;"></div>
+                    </div>
+                    <div style="writing-mode: vertical-rl; transform: rotate(180deg); color: #e5e5e5; font-size: 16px; font-weight: 500; letter-spacing: 1.5px; border-left: 1px solid #333; padding-left: 15px; height: 350px;">
+                        Random artifacts<br>from the HOVS archive
+                    </div>
+                </div>
+            </div>
+            <!-- Dual-Row Infinite Anti-Grid Marquee -->
+            <div class="marquee-wrapper">
+                <div class="marquee-row left">
+                    <!-- Cloned items to ensure seamless endless horizontal scrolling -->
+                    <div class="marquee-item">
+                        <img src="https://images.unsplash.com/photo-1542382156909-92f9d6c42171?auto=format&fit=crop&w=400&q=80" alt="Process shot">
+                        <span>The Praxis Series</span>
+                        <img src="https://images.unsplash.com/photo-1563284587-f273be8cc8bb?auto=format&fit=crop&w=400&q=80" alt="Design sketch">
+                        <span>Semplice V6</span>
+                        <img src="https://images.unsplash.com/photo-1542382156909-92f9d6c42171?auto=format&fit=crop&w=400&q=80" alt="Process shot">
+                        <span>The Praxis Series</span>
+                        <img src="https://images.unsplash.com/photo-1563284587-f273be8cc8bb?auto=format&fit=crop&w=400&q=80" alt="Design sketch">
+                        <span>Semplice V6</span>
+                    </div>
+                </div>
+                <!-- Opposite Direction Row -->
+                <div class="marquee-row right">
+                    <!-- Opposing content block -->
+                    <div class="marquee-item">
+                        <span>Carbonmade 4</span>
+                        <img src="https://images.unsplash.com/photo-1577083656158-7578ec6e8a09?auto=format&fit=crop&w=400&q=80" alt="Material study">
+                        <span>Mymind Updates</span>
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80" alt="Studio space">
+                        <span>Carbonmade 4</span>
+                        <img src="https://images.unsplash.com/photo-1577083656158-7578ec6e8a09?auto=format&fit=crop&w=400&q=80" alt="Material study">
+                        <span>Mymind Updates</span>
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80" alt="Studio space">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Masonry Grid 2 -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; padding: 0 10%; gap: 10vw; margin-top: 100px; position: relative; z-index: 2;">
+                
+                <!-- Left Column -->
+                <div style="display: flex; flex-direction: column; gap: 200px;">
+                    
+                    <!-- Business Cards -->
+                    <div>
+                        <div style="background-image: url('https://images.unsplash.com/photo-1589041127566-f084ba4fa41a?auto=format&fit=crop&w=600&q=80'); filter: grayscale(100%); width: 100%; aspect-ratio: 4/5; background-size: cover; background-position: center; border-radius: 2px;"></div>
+                        <div style="color: #666; font-size: 14px; margin-top: 25px; line-height: 1.6;">
+                            Business cards designer for myself, HOVS. Printed<br>and designed back in 2012.
+                        </div>
+                    </div>
+
+                    <!-- Yellow Poster -->
+                    <div style="background-color: #ffd600; width: 100%; aspect-ratio: 0.7; padding: 50px 40px; display: flex; flex-direction: column; justify-content: center;">
+                        <p style="color: #111; font-size: 13px; font-weight: 600; line-height: 1.8; text-align: justify; word-spacing: 2px;">
+                            You've loved this since you were a kid. You didn't color inside<br>
+                            the lines, you drew your own pictures. You were a daydreamer.<br>
+                            You did your reading assignments. but your own stories were<br>
+                            better. You grew up. You made posters for your band. you<br>
+                            published a zine. you learned just enough HTML &amp; CSS to be<br>
+                            dangerous. You took up painting. You took up photography. You<br>
+                            fell in love with architecture. with fashion. with films. You worked<br>
+                            late into the night just for the fun of it. You got a job. You learned<br>
+                            about process. about "due EOD." You followed best practice.<br>
+                            You followed the project brief. You did one, two, three rounds of<br>
+                            revisions. You made the logo pop. You made the logo bigger.<br>
+                            You optimized. you tested. You were productive. efficient. you<br>
+                            came in under hours. You pitched countless ideas that never<br>
+                            saw the light of day. You rarely saw daylight yourself. You got<br>
+                            tired. You wondered how early was too early for a mid-life crisis.<br>
+                            You thought about quitting and working on a farm. doing<br>
+                            something with your hands. You forgot why you got into this in<br>
+                            the first place -- you love to create.
+                        </p>
+                        <h4 style="color: #111; font-size: 18px; font-weight: 800; margin-top: 60px; letter-spacing: -0.5px;">Make something beautiful, for yourself.</h4>
+                    </div>
+
+                    <!-- Singapore Towers -->
+                    <div>
+                        <div style="background-image: url('https://images.unsplash.com/photo-1542617505-591b942fe2ae?auto=format&fit=crop&w=600&q=80'); filter: grayscale(100%); width: 100%; aspect-ratio: 4/5; background-size: cover; background-position: center; border-radius: 2px;"></div>
+                        <div style="color: #666; font-size: 14px; margin-top: 25px; line-height: 1.6;">
+                            Photograph of apartment towers in Singapore.
+                        </div>
+                    </div>
+
+                    <!-- Necklace -->
+                    <div>
+                        <div style="background-color: #d4d4d4; width: 100%; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; border-radius: 2px; position: relative;">
+                            <div style="width: 120px; height: 120px; border: 4px solid #fff; transform: rotate(45deg); box-shadow: 0 10px 30px rgba(0,0,0,0.1);"></div>
+                        </div>
+                        <div style="color: #666; font-size: 14px; margin-top: 25px; line-height: 1.6;">
+                            House of van Schneider Necklace concept featuring the HOVS<br>logo.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div style="display: flex; flex-direction: column; gap: 200px; padding-top: 30vh;">
+                    
+                    <!-- Marble Skateboard -->
+                    <div>
+                        <div style="background-image: url('https://images.unsplash.com/photo-1520045892556-9d8dd3bc8547?auto=format&fit=crop&w=600&q=80'); filter: grayscale(100%) contrast(1.2); width: 100%; aspect-ratio: 1; background-size: cover; background-position: center; border-radius: 2px;"></div>
+                        <div style="color: #666; font-size: 14px; margin-top: 25px; line-height: 1.6;">
+                            A skateboard made out of marble. A concept.
+                        </div>
+                    </div>
+
+                    <!-- App Mockup -->
+                    <div>
+                        <div style="background-color: #050505; width: 100%; aspect-ratio: 4/5; display: flex; justify-content: center; align-items: flex-end;">
+                            <div style="width: 70%; height: 85%; border-radius: 30px 30px 0 0; border: 8px solid #222; border-bottom: 0; background: #111; position: relative;">
+                                <!-- App interface mock -->
+                                <div style="position: absolute; top: 10%; width: 100%; text-align: center; color: #fff;">
+                                    <div style="font-size: 12px; opacity: 0.5;">&lt; END TRACK</div>
+                                    <div style="font-size: 20px; font-weight: 600; margin-top: 20px;">Breath, Body &amp; Beat</div>
+                                    <div style="font-size: 14px; opacity: 0.5; margin-top: 5px;">First Drop</div>
+                                </div>
+                                <div style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: #e5ff00; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 0 1px #fff, 0 0 40px rgba(229,255,0,0.2);">
+                                    <div style="width: 25px; height: 25px; border-left: 5px solid #000; border-right: 5px solid #000;"></div>
+                                </div>
+                                <div style="position: absolute; top: 60%; width: 100%; text-align: center; color: #fff; font-size: 12px; letter-spacing: 2px; font-weight: 800;">PLAYBACK SETTINGS</div>
+                            </div>
+                        </div>
+                        <div style="color: #666; font-size: 14px; margin-top: 25px; line-height: 1.6;">
+                            App design for Wave Meditation.
+                        </div>
+                    </div>
+
+                    <!-- Beard Oil -->
+                    <div>
+                        <div style="background-color: #111; width: 100%; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; position: relative;">
+                            <!-- Cylinder Mock -->
+                            <div style="width: 65%; height: 120%; background: linear-gradient(to right, #050505 0%, #333 50%, #050505 100%); border-radius: 10px; transform: rotate(15deg); box-shadow: 10px 10px 40px rgba(0,0,0,0.8);">
+                                <div style="position: absolute; top: 40%; left: 10%; color: #fff; font-family: var(--font-sans); letter-spacing: 5px; font-size: 30px;">B L A C K</div>
+                                <div style="position: absolute; top: 65%; left: 20%; color: #fff; font-size: 11px; font-family: var(--font-sans); letter-spacing: 3px; text-align: center; opacity: 0.8;">BEARD OIL<br>&amp; SKIN CARE<br><span style="font-size: 8px;">1 FL. OZ. / 30ML</span></div>
+                            </div>
+                        </div>
+                        <div style="color: #666; font-size: 14px; margin-top: 25px; line-height: 1.6;">
+                            Product photograph of solid cologne designed by<br>HOVS, in collaboration with Beardbrand.
+                        </div>
+                    </div>
+
+                    <!-- Porsche -->
+                    <div>
+                        <div style="background-image: url('https://images.unsplash.com/photo-1544839655-6b541d4013ea?auto=format&fit=crop&w=600&q=80'); width: 100%; aspect-ratio: 1; background-size: cover; background-position: center; border-radius: 2px;"></div>
+                        <div style="color: #666; font-size: 14px; margin-top: 25px; line-height: 1.6;">
+                            Photograph of classic Porsche.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            </div>
+            
+        </div>
+
+        <!-- Section: 3 ROOMS -->
+        <div class="project project-custom" style="padding: 0; background-color: #bdc0af;">
+            <!-- Main Hero Image -->
+            <div style="width: 100%; aspect-ratio: 16/9; max-height: 900px; background-image: url('https://images.unsplash.com/photo-1549492423-400259a2e574?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; filter: contrast(1.1);">
+                <!-- Added a darker overlay to make white text pop more if needed -->
+                <div style="position: absolute; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%); pointer-events: none;"></div>
+                
+                <div style="font-family: var(--font-serif); font-size: 4vw; color: #fff; letter-spacing: 2px; text-shadow: 0 5px 20px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 40px; position: relative; z-index: 1;">
+                    <span>THREE</span>
+                    <!-- CSS Interlocking Logo mock -->
+                    <div style="width: 15vh; height: 15vh; position: relative;">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="2" style="width: 100%; height: 100%; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));">
+                            <path d="M50 20 C60 10, 80 10, 80 30 C80 50, 50 50, 50 80 C50 50, 20 50, 20 30 C20 10, 40 10, 50 20 Z" />
+                            <path d="M20 50 C10 40, 10 20, 30 20 C50 20, 50 50, 80 50 C50 50, 50 80, 30 80 C10 80, 10 60, 20 50 Z" />
+                        </svg>
+                    </div>
+                    <span>ROOMS</span>
+                </div>
+            </div>
+
+            <!-- Metadata Row -->
+            <div class="project-meta" style="padding: 60px 10%; border-top-color: rgba(0,0,0,0.1); align-items: flex-start;">
+                <div class="project-meta-left">
+                    <h2 class="project-title" style="color: #444; font-size: 38px; letter-spacing: -1px; line-height: 1;"><strong>3 ROOMS</strong> — Creating a<br>transportive digital art<br>gallery that celebrates the<br>early internet</h2>
+                    <div class="project-tags" style="color: #666; margin-top: 20px;">Brand, Storytelling, Webdesign</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc" style="color: #555; font-size: 16px;">It started when we commissioned artist Jesperish to create three pieces of artwork incorporating the HOVS Identity. Then it became bigger. We designed and built three rooms (works of art in themselves, in 40K pixel resolution) to feature each piece of art. Why? For pure fun &amp; curiosity, like the good old days.</p>
+                    <a href="#" class="project-link" style="color: #444; border-bottom-color: rgba(0,0,0,0.2);">Visit Three Rooms</a>
+                </div>
+            </div>
+
+            <!-- Side by Side Images -->
+            <div style="display: flex; gap: 4vw; padding: 0 10%; margin-top: 40px; padding-bottom: 120px;">
+                <div style="flex: 1;">
+                    <div style="background-color: #000; width: 100%; aspect-ratio: 4/3; display: flex; justify-content: center; align-items: center; position: relative;">
+                        <!-- Gold 3d logo mock inside black bg -->
+                        <div style="width: 50%; height: 50%; filter: drop-shadow(0 0 10px rgba(255,215,0,0.3)); display: flex; justify-content: center; align-items: center;">
+                             <svg viewBox="0 0 100 100" fill="none" stroke="#d4af37" stroke-width="1.5" style="width: 100%; height: 100%;">
+                                <path d="M50 20 C60 10, 80 10, 80 30 C80 50, 50 50, 50 80 C50 50, 20 50, 20 30 C20 10, 40 10, 50 20 Z" />
+                                <path d="M20 50 C10 40, 10 20, 30 20 C50 20, 50 50, 80 50 C50 50, 50 80, 30 80 C10 80, 10 60, 20 50 Z" />
+                                <circle cx="50" cy="50" r="40" stroke="rgba(212, 175, 55, 0.3)" stroke-width="0.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div style="color: #666; font-size: 14px; margin-top: 20px;">The HOVS museum experience.</div>
+                </div>
+                <div style="flex: 1;">
+                    <div style="background-image: url('https://images.unsplash.com/photo-1510414169736-224855d0ce18?auto=format&fit=crop&w=600&q=80'); filter: grayscale(50%) sepia(20%); width: 100%; aspect-ratio: 4/3; background-size: cover; background-position: center;"></div>
+                    <div style="color: #666; font-size: 14px; margin-top: 20px;">Room Nr. 3, the paradise.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Spotify -->
+        <div class="project project-custom" style="padding: 0; background-color: #47d163;">
+            <div style="padding: 100px 10% 0;">
+                <div style="background-color: #000; width: 100%; aspect-ratio: 16/9; display: flex; justify-content: center; align-items: center;">
+                    <!-- Spotify Logo Mock -->
+                    <div style="display: flex; align-items: center; gap: 20px; color: #47d163;">
+                        <svg viewBox="0 0 100 100" width="10vw" height="10vw" fill="currentColor">
+                            <path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm22.9 72c-1.1 1.8-3.4 2.4-5.2 1.3-14.3-8.8-32.3-10.8-48.4-5.9-2 .6-4-1-4.6-3-.6-2 1-4 3-4.6 18.2-5.5 38.3-3.2 54 6.5 1.8 1.1 2.3 3.4 1.2 5.2zm7.4-16.5c-1.3 2.1-4.2 2.9-6.3 1.5-16.4-10-41.5-13-56.5-7.1-2.4.9-5-1-5.9-3.4-.9-2.4 1-5 3.4-5.9 17.5-6.8 45.4-3.4 63.8 7.8 2.1 1.4 2.8 4.2 1.5 6.3zm.5-17.1C61 26.6 35.4 25.7 20.6 30.2c-3 1-6.1-1.3-7.1-4.3-.9-3 1.3-6.1 4.3-7.1 17.5-5.2 46.2-4.1 68.7 9.2 2.7 1.6 3.6 5 2 7.7-1.6 2.7-5 3.6-7.7 2z"/>
+                        </svg>
+                        <h1 style="font-family: var(--font-sans); font-size: 8vw; font-weight: 700; letter-spacing: -3px; margin: 0;">Spotify</h1>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metadata Row -->
+            <div class="project-meta" style="padding: 60px 10%; border-top-color: rgba(0,0,0,0.1); align-items: flex-start;">
+                <div class="project-meta-left">
+                    <h2 class="project-title" style="color: #fff; font-size: 38px; letter-spacing: -1px; line-height: 1;"><strong>Spotify</strong> — Designing a<br>music brand and product for<br>millions of loyal users around<br>the world</h2>
+                    <div class="project-tags" style="color: rgba(0,0,0,0.4); margin-top: 20px;">Brand Identity, Product Design</div>
+                </div>
+                <div class="project-meta-right">
+                    <p class="project-desc" style="color: #111; font-size: 16px;">I worked for three years on the Spotify brand and product design, guiding Spotify through a major rebrand as the company tripled in size to more than 80 million users. I also worked on the Spotify Innovation Team, establishing and implementing Spotify's first design guidelines and designing future products.</p>
+                </div>
+            </div>
+
+            <!-- Dashboards -->
+            <div style="padding: 0 10%; margin-top: 40px; padding-bottom: 120px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; height: 500px; width: 100%;">
+                    <!-- Desktop UI Mock -->
+                    <div style="flex: 2; background-color: #f7dcd5; display: flex; justify-content: center; align-items: center;">
+                        <div style="width: 80%; height: 60%; background: #2b2e4a; border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; overflow: hidden;">
+                            <div style="flex: 1; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 30% 70%, #d83f5e, #2b2e4a); opacity: 0.8;"></div>
+                                <!-- Content overlay -->
+                                <div style="position: absolute; top: 30%; left: 0; width: 100%; text-align: center; color: #fff;">
+                                    <div style="font-size: 10px; opacity: 0.8; letter-spacing: 1px;">New on Spotify?</div>
+                                    <div style="font-size: 40px; font-weight: 800; line-height: 1.1; margin-top: 10px;">Only one<br>step away.</div>
+                                </div>
+                            </div>
+                            <!-- Login Panel -->
+                            <div style="width: 250px; background: #1a1c29; padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px;">
+                                <div style="width: 100%; padding: 10px; background: #1e3264; color: #fff; font-size: 10px; text-align: center; border-radius: 20px;">LOGIN WITH FACEBOOK</div>
+                                <div style="color: #666; font-size: 10px;">or</div>
+                                <div style="width: 100%; height: 30px; background: #2a2c39; border-radius: 4px;"></div>
+                                <div style="width: 100%; height: 30px; background: #2a2c39; border-radius: 4px;"></div>
+                                <div style="width: 100%; padding: 10px; border: 1px solid #1db954; color: #1db954; font-size: 10px; text-align: center; border-radius: 20px; margin-top: 10px;">START PLAYING</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Mobile UI Mock -->
+                    <div style="flex: 1; background-color: #2b3576; display: flex; justify-content: center; align-items: center;">
+                        <div style="width: 60%; height: 80%; background: #000; border-radius: 4px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; padding: 20px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: #333; border-radius: 50%;"></div>
+                                <div style="color: #fff; font-size: 10px; line-height: 1.2;">Good morning,<br><strong>Dan Champaign</strong></div>
+                            </div>
+                            <div style="margin-top: 50px; display: flex; flex-direction: column; gap: 15px;">
+                                <div style="color: #1db954; font-size: 30px; font-weight: 800; letter-spacing: -1px;">Browse</div>
+                                <div style="color: #fff; font-size: 24px; font-weight: 700; letter-spacing: -1px;">Activity</div>
+                                <div style="color: #fff; font-size: 24px; font-weight: 700; letter-spacing: -1px;">Radio</div>
+                                <div style="color: #fff; font-size: 24px; font-weight: 700; letter-spacing: -1px;">Your Music</div>
+                                <div style="color: #fff; font-size: 24px; font-weight: 700; letter-spacing: -1px;">Playlists</div>
+                            </div>
+                            <div style="margin-top: auto; color: #666; font-size: 10px;">⚙ SETTINGS</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 2vw;">
+                    <div style="flex: 2; color: #111; font-size: 14px; opacity: 0.6;">The new Spotify desktop experience.</div>
+                    <div style="flex: 1; color: #111; font-size: 14px; opacity: 0.6;">The new Spotify mobile app.</div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Grand Footer / Navigation Menu -->
+        <div class="project project-custom footer-arches" style="background-color: #000; width: 100%; height: 900px; padding: 0; position: relative; overflow: hidden; display: flex;">
+            
+            <!-- Background Gradient Fog -->
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to bottom, transparent, rgba(50,55,60,0.6)); pointer-events: none;"></div>
+
+            <!-- Absolute SVG overlay drawing the entire architectural framework -->
+            <svg viewBox="0 0 200 100" preserveAspectRatio="none" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; stroke: rgba(255,255,255,0.25); stroke-width: 0.15; fill: none; pointer-events: none;">
+                <!-- Far Left Pillar -->
+                <rect x="5" y="45" width="8" height="55" />
+                <line x1="6" y1="45" x2="6" y2="100" />
+                <line x1="7.5" y1="45" x2="7.5" y2="100" />
+                <line x1="9" y1="45" x2="9" y2="100" />
+                <line x1="10.5" y1="45" x2="10.5" y2="100" />
+                <line x1="12" y1="45" x2="12" y2="100" />
+                <rect x="3" y="43" width="12" height="2" />
+                <rect x="4" y="42" width="10" height="1" />
+                
+                <!-- Far Right Pillar -->
+                <rect x="187" y="45" width="8" height="55" />
+                <line x1="188" y1="45" x2="188" y2="100" />
+                <line x1="189.5" y1="45" x2="189.5" y2="100" />
+                <line x1="191" y1="45" x2="191" y2="100" />
+                <line x1="192.5" y1="45" x2="192.5" y2="100" />
+                <line x1="194" y1="45" x2="194" y2="100" />
+                <rect x="185" y="43" width="12" height="2" />
+                <rect x="186" y="42" width="10" height="1" />
+
+                <!-- Left Archway Path (from Left Pillar to Center) -->
+                <!-- Outer Arch -->
+                <path d="M 13 42 C 13 10, 40 -5, 50 -10 C 60 -5, 87 10, 95 100" />
+                <!-- Middle Arch -->
+                <path d="M 18 42 C 18 15, 43 0, 50 -4 C 57 0, 82 15, 88 100" />
+                <!-- Inner Arch -->
+                <path d="M 23 42 C 23 20, 46 8, 50 3 C 54 8, 77 20, 81 100" />
+                
+                <!-- Right Archway Path (from Center to Right Pillar) -->
+                <!-- Outer Arch -->
+                <path d="M 105 100 C 113 10, 140 -5, 150 -10 C 160 -5, 187 10, 187 42" />
+                <!-- Middle Arch -->
+                <path d="M 112 100 C 118 15, 143 0, 150 -4 C 157 0, 182 15, 182 42" />
+                <!-- Inner Arch -->
+                <path d="M 119 100 C 123 20, 146 8, 150 3 C 154 8, 177 20, 177 42" />
+                
+                <!-- Left Arch Steps -->
+                <line x1="28" y1="96" x2="76" y2="96" />
+                <line x1="26" y1="98" x2="78" y2="98" />
+                
+                <!-- Right Arch Steps -->
+                <line x1="124" y1="96" x2="172" y2="96" />
+                <line x1="122" y1="98" x2="174" y2="98" />
+            </svg>
+
+            <!-- Foreground Content Layer -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex;">
+                
+                <!-- Left Menu Pane -->
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                    <!-- HOVS Cross Small -->
+                    <div style="position: absolute; top: 10%; opacity: 0.3;">
+                         <svg viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" style="width: 40px; height: 40px; transform: rotate(45deg);">
+                            <path d="M50 20 C60 10, 80 10, 80 30 C80 50, 50 50, 50 80 C50 50, 20 50, 20 30 C20 10, 40 10, 50 20 Z" />
+                            <path d="M20 50 C10 40, 10 20, 30 20 C50 20, 50 50, 80 50 C50 50, 50 80, 30 80 C10 80, 10 60, 20 50 Z" />
+                        </svg>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; color: #fff; font-family: var(--font-serif); font-size: 2vw; text-shadow: 0 5px 15px rgba(0,0,0,1);">
+                        <a href="#" style="color: #fff; text-decoration: none;">Threerooms</a>
+                        <div style="color: rgba(255,255,255,0.3); font-size: 10px;">•</div>
+                        <a href="#" style="color: #fff; text-decoration: none;">Color Inspiration</a>
+                        <div style="color: rgba(255,255,255,0.3); font-size: 10px;">•</div>
+                        <a href="#" style="color: #fff; text-decoration: none;">Newsletter</a>
+                    </div>
+                </div>
+
+                <!-- Right Menu Pane -->
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                    <!-- HOVS Cross Small -->
+                    <div style="position: absolute; top: 10%; opacity: 0.3;">
+                         <svg viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" style="width: 40px; height: 40px; transform: rotate(45deg);">
+                            <path d="M50 20 C60 10, 80 10, 80 30 C80 50, 50 50, 50 80 C50 50, 20 50, 20 30 C20 10, 40 10, 50 20 Z" />
+                            <path d="M20 50 C10 40, 10 20, 30 20 C50 20, 50 50, 80 50 C50 50, 50 80, 30 80 C10 80, 10 60, 20 50 Z" />
+                        </svg>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; color: #fff; font-family: var(--font-serif); font-size: 2vw; text-shadow: 0 5px 15px rgba(0,0,0,1);">
+                        <a href="#" style="color: #fff; text-decoration: none;">Instagram</a>
+                        <div style="color: rgba(255,255,255,0.3); font-size: 10px;">•</div>
+                        <a href="#" style="color: #fff; text-decoration: none;">LinkedIn</a>
+                        <div style="color: rgba(255,255,255,0.3); font-size: 10px;">•</div>
+                        <a href="#" style="color: #fff; text-decoration: none;">Twitter</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+        <!-- Connect Bottom Footer -->
+        <div style="background-color: #0d121c; padding: 120px 0; display: flex; justify-content: center; align-items: center; gap: 40px; position: relative; z-index: 10;">
+            <a href="#" target="_blank" style="color: #64748b; transition: color 0.3s; transform: scale(1.1);" onmouseover="this.style.color='#fff'; document.querySelector('.custom-cursor').classList.add('hover')" onmouseout="this.style.color='#64748b'; document.querySelector('.custom-cursor').classList.remove('hover')" aria-label="Github">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+            </a>
+            <a href="#" target="_blank" style="color: #64748b; transition: color 0.3s; transform: scale(1.1);" onmouseover="this.style.color='#fff'; document.querySelector('.custom-cursor').classList.add('hover')" onmouseout="this.style.color='#64748b'; document.querySelector('.custom-cursor').classList.remove('hover')" aria-label="LinkedIn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+            </a>
+            <a href="#" target="_blank" style="color: #64748b; transition: color 0.3s; transform: scale(1.1);" onmouseover="this.style.color='#fff'; document.querySelector('.custom-cursor').classList.add('hover')" onmouseout="this.style.color='#64748b'; document.querySelector('.custom-cursor').classList.remove('hover')" aria-label="Telegram">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </a>
+        </div>
+    <!-- Interaction Dynamics Engine -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Custom Cursor Functionality
+            const cursor = document.querySelector('.custom-cursor');
+            const dot = document.querySelector('.cursor-dot');
+            const hoverTargets = document.querySelectorAll('a, button, .project-link, .index-btn');
+
+            document.addEventListener('mousemove', (e) => {
+                // Instantly teleport the tracking dot
+                dot.style.left = e.clientX + 'px';
+                dot.style.top = e.clientY + 'px';
+
+                // Update CSS variables for the volumetric glow effect
+                cursor.style.setProperty('--mouse-x', e.clientX + 'px');
+                cursor.style.setProperty('--mouse-y', e.clientY + 'px');
+            });
+
+            // Expand and invert cursor on interactive hover targets
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hover');
+                    dot.classList.add('hover');
+                });
+                target.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hover');
+                    dot.classList.remove('hover');
+                });
+            });
+
+            // 2. Scroll Reveal Intersection Observers
+            // Target all majestic project blocks for a dramatic entrance
+            const sectionElements = document.querySelectorAll('.project, .hero-graphics, .project-custom');
+            
+            // Programmatically inject the initial CSS hide state
+            sectionElements.forEach(sec => sec.classList.add('reveal'));
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Execute animation only once to preserve smooth scrolling up
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { 
+                threshold: 0.1, // Trigger slightly before it hits the viewport 
+                rootMargin: "0px 0px -50px 0px" // Trigger threshold bounding box
+            });
+
+            sectionElements.forEach(sec => observer.observe(sec));
+        });
+    </script>
+</body>
+</html>
